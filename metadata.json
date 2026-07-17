@@ -1,0 +1,6 @@
+{
+  "name": "Nova Physiotherapy Specialty Clinic",
+  "description": "Nova Physiotherapy Specialty Clinic (ኖቫ የፊዚዮቴራፒ ልዩ ክሊኒክ) in Addis Ababa, Ethiopia - Restore Your Movement, Reclaim Your Health.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
