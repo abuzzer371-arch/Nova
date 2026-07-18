@@ -1216,7 +1216,7 @@
       .floating-telegram-btn {
         position: fixed;
         bottom: 2rem;
-        right: 2rem;
+        left: 2rem;
         background-color: #0088cc;
         color: white;
         width: 60px;
@@ -1233,12 +1233,180 @@
         transform: scale(1.05);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
       }
+      
+      /* Chatbot Button */
+      .chatbot-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background-color: var(--primary);
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+      .chatbot-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Chatbot Window */
+      .chatbot-window {
+        position: fixed;
+        bottom: 5.5rem;
+        right: 2rem;
+        width: 350px;
+        height: 500px;
+        max-height: 80vh;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        overflow: hidden;
+        transform: translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      .chatbot-window.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+      }
+      .chatbot-header {
+        background: var(--primary);
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .chatbot-header .bot-title {
+        font-weight: 800;
+        font-size: 1rem;
+      }
+      .chatbot-header .bot-status {
+        font-size: 0.75rem;
+        font-weight: 400;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .chatbot-header .bot-status::before {
+        content: '';
+        display: block;
+        width: 8px;
+        height: 8px;
+        background: var(--success);
+        border-radius: 50%;
+      }
+      .chatbot-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+      .chatbot-messages {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        background: var(--bg-warm);
+      }
+      .chatbot-msg {
+        max-width: 85%;
+        padding: 0.6rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        font-weight: 500;
+      }
+      .chatbot-msg.user {
+        align-self: flex-end;
+        background: var(--primary);
+        color: white;
+        border-bottom-right-radius: 0;
+      }
+      .chatbot-msg.bot {
+        align-self: flex-start;
+        background: white;
+        border: 1px solid var(--border-light);
+        color: var(--ink);
+        border-bottom-left-radius: 0;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      }
+      .chatbot-input-area {
+        display: flex;
+        padding: 0.8rem;
+        background: white;
+        border-top: 1px solid var(--border-light);
+      }
+      .chatbot-input-area input {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid var(--border-color);
+        border-radius: 999px;
+        outline: none;
+        font-family: inherit;
+        font-size: 0.9rem;
+      }
+      .chatbot-input-area input:focus {
+        border-color: var(--primary);
+      }
+      .chatbot-input-area button {
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        margin-left: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+      .chatbot-input-area button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
       @media (max-width: 768px) {
         .floating-telegram-btn {
+          bottom: 1.5rem;
+          left: 1.5rem;
+          width: 50px;
+          height: 50px;
+        }
+        .chatbot-btn {
           bottom: 1.5rem;
           right: 1.5rem;
           width: 50px;
           height: 50px;
+        }
+        .chatbot-window {
+          bottom: 5rem;
+          right: 1rem;
+          left: 1rem;
+          width: auto;
+          height: 60vh;
         }
       }
     </style>
@@ -1870,9 +2038,157 @@
       </svg>
     </a>
 
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbot-window">
+      <div class="chatbot-header">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #60a5fa;">
+            <rect x="3" y="11" width="18" height="10" rx="2" ry="2"/>
+            <circle cx="12" cy="5" r="2"/>
+            <path d="M12 7v4"/>
+            <line x1="8" y1="16" x2="8" y2="16"/>
+            <line x1="16" y1="16" x2="16" y2="16"/>
+          </svg>
+          <div>
+            <div class="bot-title">Nova AI Assistant</div>
+            <div class="bot-status">Online / በመስመር ላይ</div>
+          </div>
+        </div>
+        <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+      </div>
+      <div class="chatbot-messages" id="chatbot-messages">
+        <div class="chatbot-msg bot">Hello! I'm the Nova Clinic AI Assistant. How can I help you today? / ሰላም! የኖቫ ክሊኒክ አርቴፊሻል አስተዋይ ረዳት ነኝ። ዛሬ ምን ልርዳዎት?</div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="Type a message..." onkeypress="handleChatEnter(event)" />
+        <button id="chatbot-send-btn" onclick="sendChatMessage()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Chatbot Button -->
+    <button class="chatbot-btn" onclick="toggleChatbot()" aria-label="Open AI Chat">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="10" rx="2" ry="2"/>
+        <circle cx="12" cy="5" r="2"/>
+        <path d="M12 7v4"/>
+        <line x1="8" y1="16" x2="8" y2="16"/>
+        <line x1="16" y1="16" x2="16" y2="16"/>
+      </svg>
+    </button>
+
 
     <!-- --- CLIENT-SIDE BEHAVIOR SCRIPTS (VANILLA JAVASCRIPT) --- -->
     <script>
+      // Chatbot logic
+      let chatHistory = [];
+      const chatbotWindow = document.getElementById('chatbot-window');
+      const chatMessagesEl = document.getElementById('chatbot-messages');
+      const chatInputEl = document.getElementById('chatbot-input');
+      const chatSendBtnEl = document.getElementById('chatbot-send-btn');
+
+      function toggleChatbot() {
+        chatbotWindow.classList.toggle('open');
+        if (chatbotWindow.classList.contains('open')) {
+          chatInputEl.focus();
+        }
+      }
+
+      function handleChatEnter(e) {
+        if (e.key === 'Enter') {
+          sendChatMessage();
+        }
+      }
+
+      async function sendChatMessage() {
+        const text = chatInputEl.value.trim();
+        if (!text) return;
+
+        addChatMessage('user', text);
+        chatInputEl.value = '';
+        chatInputEl.disabled = true;
+        chatSendBtnEl.disabled = true;
+
+        const loadingId = 'loading-' + Date.now();
+        addChatMessage('bot', '...', loadingId);
+
+        try {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text, history: chatHistory })
+          });
+          const data = await response.json();
+
+          const loadingEl = document.getElementById(loadingId);
+          if (loadingEl) loadingEl.remove();
+
+          if (data.error) {
+            addChatMessage('bot', 'Sorry, I encountered an error. / ይቅርታ፣ ስህተት አጋጥሟል።');
+          } else if (data.functionCall) {
+            const args = data.functionCall.args;
+            try {
+              const fRes = await fetch('https://api.web3forms.com/submit', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                  body: JSON.stringify({
+                      access_key: 'c04030b1-d612-4a98-9971-c1ce7306ee7c',
+                      subject: `Chatbot Appointment Request from ${args.name}`,
+                      from_name: 'Nova Clinic AI Assistant',
+                      name: args.name,
+                      phone: args.phone,
+                      email: args.email || 'abuzzer371@gmail.com',
+                      preferred_date: args.preferred_date,
+                      requested_service: args.requested_service,
+                      notes: args.notes || '',
+                      message: `Appointment booked via AI Assistant.\nService: ${args.requested_service}\nDate: ${args.preferred_date}`
+                  })
+              });
+              if (fRes.ok) {
+                  const successMsg = 'Your appointment has been successfully requested! Our team will contact you shortly to confirm the exact time. / ቀጠሮዎ በተሳካ ሁኔታ ተይዟል! ትክክለኛውን ሰዓት ለማረጋገጥ ቡድናችን በቅርቡ ያነጋግርዎታል።';
+                  addChatMessage('bot', successMsg);
+                  chatHistory.push({ role: 'user', text: text });
+                  chatHistory.push({ role: 'model', text: successMsg });
+              } else {
+                  const errMsg = 'Failed to book appointment. Please try calling us directly on +251 91 124 2443. / ቀጠሮ መያዝ አልተቻለም። እባክዎ በቀጥታ ይደውሉልን።';
+                  addChatMessage('bot', errMsg);
+                  chatHistory.push({ role: 'user', text: text });
+                  chatHistory.push({ role: 'model', text: errMsg });
+              }
+            } catch (err) {
+                 console.error(err);
+                 const netErrMsg = 'Network error while booking appointment. Please try calling us directly on +251 91 124 2443. / ቀጠሮ መያዝ አልተቻለም። እባክዎ በቀጥታ ይደውሉልን።';
+                 addChatMessage('bot', netErrMsg);
+                 chatHistory.push({ role: 'user', text: text });
+                 chatHistory.push({ role: 'model', text: netErrMsg });
+            }
+          } else {
+            addChatMessage('bot', data.response);
+            chatHistory.push({ role: 'user', text: text });
+            chatHistory.push({ role: 'model', text: data.response });
+          }
+        } catch (err) {
+          console.error(err);
+          const loadingEl = document.getElementById(loadingId);
+          if (loadingEl) loadingEl.remove();
+          addChatMessage('bot', 'Network error. Please try again. / የኔትወርክ ችግር አጋጥሟል፣ እባክዎ እንደገና ይሞክሩ።');
+        } finally {
+          chatInputEl.disabled = false;
+          chatSendBtnEl.disabled = false;
+          chatInputEl.focus();
+        }
+      }
+
+      function addChatMessage(role, text, id = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `chatbot-msg ${role}`;
+        if (id) msgDiv.id = id;
+        msgDiv.textContent = text;
+        chatMessagesEl.appendChild(msgDiv);
+        chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+      }
+
       // State Management
       let currentLanguage = 'en';
 
